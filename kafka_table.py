@@ -28,8 +28,8 @@ def kafka_table(beamline_acronym, config_file, topic_string="bluesky.documents")
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Kafka LiveTable Monitor")
     parser.add_argument("--bl", required=True, help="Beamline acronym used for kafka topic")
-    parser.add_argument("--config-file", required=True, help="kafka config file location")
-    parser.add_argument("--topic-string", default="bluesky.documents", help="string to be combined with acronym to create topic")
+    parser.add_argument("--config-file", default="/etc/bluesky/kafka.yml", help="kafka config file location")
+    parser.add_argument("--topic-string", default="bluesky.runengine.documents", help="string to be combined with acronym to create topic")
 
     args = parser.parse_args()
 
