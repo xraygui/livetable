@@ -28,7 +28,7 @@ def kafka_table(beamline_acronym, config_file, topic_string="bluesky.documents",
     kafka_dispatcher.start()
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description="Kafka LiveTable Monitor")
     parser.add_argument("--bl", required=True, help="Beamline acronym used for kafka topic")
     parser.add_argument("--config-file", default="/etc/bluesky/kafka.yml", help="kafka config file location")
@@ -37,3 +37,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     kafka_table(args.bl, args.config_file, args.topic_string)
+
+
+if __name__ == "__main__":
+    main()

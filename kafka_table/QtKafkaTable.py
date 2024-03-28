@@ -1,9 +1,9 @@
 from qtpy.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QMainWindow
 from qtpy.QtCore import QThread, Slot, Signal, QObject
-from kafka_table import kafka_table
 import argparse
 import queue
 import time
+from .kafka_table import kafka_table
 from bluesky_widgets.qt.run_engine_client import QtReConsoleMonitor
 
 
