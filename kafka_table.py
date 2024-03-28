@@ -1,11 +1,14 @@
 import nslsii.kafka_utils
 from bluesky_kafka import RemoteDispatcher
 from bluesky.callbacks.best_effort import BestEffortCallback
+from lessEffortCallback import LessEffortCallback
 import uuid
 import argparse
 
-def kafka_table(beamline_acronym, config_file, topic_string="bluesky.documents"):
-    bec = BestEffortCallback()
+
+def kafka_table(beamline_acronym, config_file, topic_string="bluesky.documents", out=print):
+    bec = LessEffortCallback(out=out)
+    #bec = BestEffortCallback()
     kafka_config = nslsii.kafka_utils._read_bluesky_kafka_config_file(
         config_file_path=config_file
     )
