@@ -1,7 +1,7 @@
 import nslsii.kafka_utils
 from bluesky_kafka import RemoteDispatcher
 from bluesky.callbacks.best_effort import BestEffortCallback
-from lessEffortCallback import LessEffortCallback
+from .lessEffortCallback import LessEffortCallback
 import uuid
 import argparse
 

@@ -80,11 +80,17 @@ class QtKafkaTableTab(QWidget):
         self.kafkaTable = LiveTableModel(bl_acronym, kafka_config)
 
 
-def main(*args, **kwargs):
+def main():
+    parser = argparse.ArgumentParser(description="Kafka LiveTable Monitor")
+    parser.add_argument("--bl", required=True, help="Beamline acronym used for kafka topic")
+    parser.add_argument("--config-file", default="/etc/bluesky/kafka.yml", help="kafka config file location")
+    parser.add_argument("--topic-string", default="bluesky.runengine.documents", help="string to be combined with acronym to create topic")
+
+    args = parser.parse_args()
     app = QApplication([])
 
     main_window = QMainWindow()
-    model = LiveTableModel(*args, **kwargs)
+    model = LiveTableModel(args.bl, args.config_file, topic_string=args.topic_string)
     central_widget = QtReConsoleMonitor(model)
     main_window.setCentralWidget(central_widget)
     main_window.show()
@@ -92,11 +98,4 @@ def main(*args, **kwargs):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Kafka LiveTable Monitor")
-    parser.add_argument("--bl", required=True, help="Beamline acronym used for kafka topic")
-    parser.add_argument("--config-file", default="/etc/bluesky/kafka.yml", help="kafka config file location")
-    parser.add_argument("--topic-string", default="bluesky.runengine.documents", help="string to be combined with acronym to create topic")
-
-    args = parser.parse_args()
-
-    main(args.bl, args.config_file, topic_string=args.topic_string)
+    main()
