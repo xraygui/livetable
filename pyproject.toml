@@ -18,7 +18,7 @@ console-livetable = "kafka_table.kafka_table:main"
 qt-livetable = "kafka_table.QtKafkaTable:main"
 
 [project.entry-points."sst_gui.tabs"]
-QtKafkaTableTab = "kafka_table.QtKafkaTable:QtKafkaTableTab"
+kafka-table-tab = "kafka_table.QtKafkaTable:QtKafkaTableTab"
 
 [build-system]
 requires = ["setuptools>=42", "wheel"]
