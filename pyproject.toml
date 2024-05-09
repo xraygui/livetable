@@ -14,11 +14,15 @@ dependencies = [
 ]
 
 [project.entry-points.console_scripts]
-console-livetable = "kafka_table.kafka_table:main"
-qt-livetable = "kafka_table.QtKafkaTable:main"
+kafka-livetable = "kafka_table.kafka_table:main"
+qt-kafka-livetable = "kafka_table.QtKafkaTable:main"
+zmq-livetable = "kafka_table.zmq_table:main"
+qt-zmq-livetable = "kafka_table.QtZmqTable:main"
+
 
 [project.entry-points."sst_gui.tabs"]
 kafka-table-tab = "kafka_table.QtKafkaTable:QtKafkaTableTab"
+zmq-table-tab = "kafka_table.QtZmqTable:QtZMQTableTab"
 
 [build-system]
 requires = ["setuptools>=42", "wheel"]
