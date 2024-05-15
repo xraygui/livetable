@@ -1,7 +1,7 @@
 [project]
-name = "kafka_table"
+name = "livetable"
 version = "0.1.0"
-description = "An implementation of LiveTable running over Kafka"
+description = "An implementation of LiveTable running over Kafka or ZMQ"
 authors = [
     {name = "Charles Titus", email = "ctitus@bnl.gov"}
 ]
@@ -14,15 +14,15 @@ dependencies = [
 ]
 
 [project.entry-points.console_scripts]
-kafka-livetable = "kafka_table.kafka_table:main"
-qt-kafka-livetable = "kafka_table.QtKafkaTable:main"
-zmq-livetable = "kafka_table.zmq_table:main"
-qt-zmq-livetable = "kafka_table.QtZmqTable:main"
+kafka-livetable = "livetable.kafka_table:main"
+qt-kafka-livetable = "livetable.QtKafkaTable:main"
+zmq-livetable = "livetable.zmq_table:main"
+qt-zmq-livetable = "livetable.QtZmqTable:main"
 
 
-[project.entry-points."sst_gui.tabs"]
-kafka-table-tab = "kafka_table.QtKafkaTable:QtKafkaTableTab"
-zmq-table-tab = "kafka_table.QtZmqTable:QtZMQTableTab"
+[project.entry-points.nbs_gui.tabs]
+kafka-table-tab = "livetable.QtKafkaTable:QtKafkaTableTab"
+zmq-table-tab = "livetable.QtZmqTable:QtZMQTableTab"
 
 [build-system]
 requires = ["setuptools>=42", "wheel"]
