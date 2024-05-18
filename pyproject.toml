@@ -20,7 +20,7 @@ zmq-livetable = "livetable.zmq_table:main"
 qt-zmq-livetable = "livetable.QtZmqTable:main"
 
 
-[project.entry-points.nbs_gui.tabs]
+[project.entry-points."nbs_gui.tabs"]
 kafka-table-tab = "livetable.QtKafkaTable:QtKafkaTableTab"
 zmq-table-tab = "livetable.QtZmqTable:QtZMQTableTab"
 
