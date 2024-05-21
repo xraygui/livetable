@@ -56,6 +56,7 @@ class LessEffortCallback(CallbackBase):
         self._out = out
         self._cleanup_motor_heuristic = False
         self._stream_names_seen = set()
+        self._started = False
 
         # hack to handle the bottom border of the table
         self._buffer = StringIO()
@@ -92,6 +93,7 @@ class LessEffortCallback(CallbackBase):
 
     def start(self, doc):
         self.clear()
+        print("Start Doc Received")
         self._start_doc = doc
         self.plan_hints = doc.get("hints", {})
 
@@ -145,8 +147,11 @@ class LessEffortCallback(CallbackBase):
             self._out(
                 "Persistent Unique Scan ID: '{0}'".format(self._start_doc["uid"])
             )  # noqa: UP030
+        self._started = True
 
     def descriptor(self, doc):
+        if not self._started:
+            return
         self._descriptors[doc["uid"]] = doc
         stream_name = doc.get("name", "primary")  # fall back for old docs
 
@@ -192,6 +197,8 @@ class LessEffortCallback(CallbackBase):
                 self._table("descriptor", doc)
 
     def event(self, doc):
+        if not self._started:
+            return
         descriptor = self._descriptors[doc["descriptor"]]
         if descriptor.get("name") == "primary":
             if self._table is not None:
@@ -222,6 +229,8 @@ class LessEffortCallback(CallbackBase):
                     self._out(border)
 
     def stop(self, doc):
+        if not self._started:
+            return
         if self._table is not None:
             self._table("stop", doc)
 
@@ -230,6 +239,7 @@ class LessEffortCallback(CallbackBase):
             self._buffer.seek(0)
             self._out(self._buffer.read())
             self._out("\n")
+        self._started = False
 
     def clear(self):
         self._start_doc = None
