@@ -1,15 +1,17 @@
 from qtpy.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QMainWindow
 from qtpy.QtCore import QThread, Slot, Signal, QObject, Qt, QTimer
 from qtpy.QtGui import QFontInfo, QFont
+
 # import argparse
 import queue
 import time
+
 # from .kafka_table import qt_kafka_table
 from .zmq_table import qt_zmq_table
 
-from bluesky_widgets.qt.run_engine_client import QtReConsoleMonitor
+# from bluesky_widgets.qt.run_engine_client import QtReConsoleMonitor
 
-# from .QtReConsoleMonitor import QtReConsoleMonitor
+from .simpleConsoleMonitor import QtReConsoleMonitor
 import sys
 
 
@@ -20,9 +22,7 @@ class LiveTableModel(QWidget):
     ):
         super().__init__(parent)
         self.msg_queue = queue.Queue()
-        self.zmq_dispatcher = qt_zmq_table(
-        self.newMsg
-        )
+        self.zmq_dispatcher = qt_zmq_table(self.newMsg)
         self.zmq_dispatcher.setParent(self)
         self.zmq_dispatcher.start()
 
@@ -91,8 +91,6 @@ class QtZMQTableTab(QWidget):
         font = self.zmqMonitor._text_edit.font()
         actual_font = QFontInfo(font)
         print(f"Font used: {actual_font.family()}, Font Desired: {font.family()}")
-
-
 
 
 def main():

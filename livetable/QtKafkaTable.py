@@ -8,7 +8,7 @@ from .kafka_table import qt_kafka_table
 
 # from bluesky_widgets.qt.run_engine_client import QtReConsoleMonitor
 
-from .QtReConsoleMonitor import QtReConsoleMonitor
+from .simpleConsoleMonitor import QtReConsoleMonitor
 import sys
 
 
