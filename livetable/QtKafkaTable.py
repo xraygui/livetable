@@ -6,9 +6,9 @@ import queue
 import time
 from .kafka_table import qt_kafka_table
 
-from bluesky_widgets.qt.run_engine_client import QtReConsoleMonitor
+# from bluesky_widgets.qt.run_engine_client import QtReConsoleMonitor
 
-# from .QtReConsoleMonitor import QtReConsoleMonitor
+from .QtReConsoleMonitor import QtReConsoleMonitor
 import sys
 
 
@@ -81,7 +81,12 @@ class QtKafkaTableTab(QWidget):
         self.config = model.settings.gui_config
         bl_acronym = self.config.get("kafka", {}).get("bl_acronym", "")
         kafka_config = self.config.get("kafka", {}).get("config_file", "")
-        self.kafkaTable = LiveTableModel(bl_acronym, kafka_config)
+        topic_string = self.config.get("kafka", {}).get(
+            "topic_string", "bluesky.runengine.documents"
+        )
+        self.kafkaTable = LiveTableModel(
+            bl_acronym, kafka_config, topic_string=topic_string
+        )
         self.kafkaMonitor = QtReConsoleMonitor(self.kafkaTable, self)
         # self.kafkaMonitor._text_edit.setFontFamily("monospace")
 
