@@ -59,9 +59,7 @@ def qt_kafka_table(
     )
 
     kafka_dispatcher.subscribe(bec)
-    return kafka_dispatcher
-
-    
+    return kafka_dispatcher, bec
 
 
 def main():

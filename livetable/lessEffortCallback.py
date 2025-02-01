@@ -38,12 +38,12 @@ def hinted_fields(descriptor):
 @make_class_safe(logger=logger)
 class LessEffortCallback(CallbackBase):
     def __init__(
-            self,
-            *,
-            fig_factory=None,
-            table_enabled=True,
-            out=print,
-            **kwargs,
+        self,
+        *,
+        fig_factory=None,
+        table_enabled=True,
+        out=print,
+        **kwargs,
     ):
         super().__init__(**kwargs)
         # internal state
@@ -62,6 +62,16 @@ class LessEffortCallback(CallbackBase):
         self._buffer = StringIO()
         self._baseline_toggle = True
 
+    @property
+    def baseline_enabled(self):
+        """Whether baseline readings are printed."""
+        return self._baseline_enabled
+
+    @baseline_enabled.setter
+    def baseline_enabled(self, enabled):
+        """Enable or disable baseline readings."""
+        self._baseline_enabled = bool(enabled)
+
     def enable_heading(self):
         "Print timestamp and IDs at the top of a run."
         self._heading_enabled = True
@@ -77,14 +87,6 @@ class LessEffortCallback(CallbackBase):
     def disable_table(self):
         "Opposite of enable_table()"
         self._table_enabled = False
-
-    def enable_baseline(self):
-        "Print hinted fields from the 'baseline' stream."
-        self._baseline_enabled = True
-
-    def disable_baseline(self):
-        "Opposite of enable_baseline()"
-        self._baseline_enabled = False
 
     def __call__(self, name, doc, *args, **kwargs):
         if not (self._table_enabled or self._baseline_enabled):
@@ -185,13 +187,14 @@ class LessEffortCallback(CallbackBase):
         # duplicated here.
         columns = [c for c in columns if c not in self.all_dim_fields]
 
-
         # ## TABLE ## #
         if stream_name == self.dim_stream:
             if self._table_enabled:
                 # plot everything, independent or dependent variables
                 self._table = LiveTable(
-                    list(self.all_dim_fields) + columns, separator_lines=False, out=self._out
+                    list(self.all_dim_fields) + columns,
+                    separator_lines=False,
+                    out=self._out,
                 )
                 self._table("start", self._start_doc)
                 self._table("descriptor", doc)

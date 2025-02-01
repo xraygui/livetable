@@ -1,4 +1,12 @@
-from qtpy.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QMainWindow
+from qtpy.QtWidgets import (
+    QWidget,
+    QLabel,
+    QApplication,
+    QVBoxLayout,
+    QMainWindow,
+    QCheckBox,
+    QHBoxLayout,
+)
 from qtpy.QtCore import QThread, Slot, Signal, QObject, Qt, QTimer
 from qtpy.QtGui import QFontInfo, QFont
 
@@ -22,7 +30,9 @@ class LiveTableModel(QWidget):
     ):
         super().__init__(parent)
         self.msg_queue = queue.Queue()
-        self.zmq_dispatcher = qt_zmq_table(self.newMsg)
+        zmq_dispatcher, callback = qt_zmq_table(self.newMsg)
+        self.zmq_dispatcher = zmq_dispatcher
+        self.callback = callback
         self.zmq_dispatcher.setParent(self)
         self.zmq_dispatcher.start()
 
@@ -83,14 +93,35 @@ class QtZMQTableTab(QWidget):
         font.setStyleHint(QFont.Monospace)
         self.zmqMonitor._text_edit.setFont(font)
 
+        # Create baseline control
+        self.baselineCheck = QCheckBox("Show Baseline", self)
+        self.baselineCheck.setChecked(True)
+        self.baselineCheck.stateChanged.connect(self.toggleBaseline)
+
         vbox = QVBoxLayout()
         vbox.addWidget(QLabel("ZMQ Table Monitor"))
+
+        # Add controls in a horizontal layout
+        controls = QHBoxLayout()
+        controls.addWidget(self.baselineCheck)
+        controls.addStretch()  # Push controls to the left
+        vbox.addLayout(controls)
+
         vbox.addWidget(self.zmqMonitor)
         self.setLayout(vbox)
 
         font = self.zmqMonitor._text_edit.font()
         actual_font = QFontInfo(font)
         print(f"Font used: {actual_font.family()}, Font Desired: {font.family()}")
+
+    def toggleBaseline(self, state):
+        """Toggle baseline readings on/off."""
+        print("Toggle Baseline")
+        if hasattr(self.zmqTable, "callback"):
+            print("Baseline enabled: ", bool(state))
+            self.zmqTable.callback.baseline_enabled = bool(state)
+        else:
+            print("No callback found")
 
 
 def main():

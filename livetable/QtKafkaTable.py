@@ -1,4 +1,12 @@
-from qtpy.QtWidgets import QWidget, QLabel, QApplication, QVBoxLayout, QMainWindow
+from qtpy.QtWidgets import (
+    QWidget,
+    QLabel,
+    QApplication,
+    QVBoxLayout,
+    QMainWindow,
+    QCheckBox,
+    QHBoxLayout,
+)
 from qtpy.QtCore import QThread, Slot, Signal, QObject, Qt, QTimer
 from qtpy.QtGui import QFontInfo, QFont
 import argparse
@@ -22,7 +30,7 @@ class LiveTableModel(QWidget):
     ):
         super().__init__(parent)
         self.msg_queue = queue.Queue()
-        self.kafka_dispatcher = qt_kafka_table(
+        self.kafka_dispatcher, self.callback = qt_kafka_table(
             beamline_acronym,
             config_file,
             topic_string,
@@ -88,22 +96,38 @@ class QtKafkaTableTab(QWidget):
             bl_acronym, kafka_config, topic_string=topic_string
         )
         self.kafkaMonitor = QtReConsoleMonitor(self.kafkaTable, self)
-        # self.kafkaMonitor._text_edit.setFontFamily("monospace")
 
-        # Printing the font and font family used by self.kafkaMonitor
+        # Set up monospace font
         font = self.kafkaMonitor._text_edit.font()
         font.setFamily("Monospace")
         font.setStyleHint(QFont.Monospace)
         self.kafkaMonitor._text_edit.setFont(font)
 
+        # Create baseline control
+        self.baselineCheck = QCheckBox("Show Baseline", self)
+        self.baselineCheck.setChecked(True)
+        self.baselineCheck.stateChanged.connect(self.toggleBaseline)
+
         vbox = QVBoxLayout()
         vbox.addWidget(QLabel("Kafka Table Monitor"))
+
+        # Add controls in a horizontal layout
+        controls = QHBoxLayout()
+        controls.addWidget(self.baselineCheck)
+        controls.addStretch()  # Push controls to the left
+        vbox.addLayout(controls)
+
         vbox.addWidget(self.kafkaMonitor)
         self.setLayout(vbox)
 
         font = self.kafkaMonitor._text_edit.font()
         actual_font = QFontInfo(font)
         print(f"Font used: {actual_font.family()}, Font Desired: {font.family()}")
+
+    def toggleBaseline(self, state):
+        """Toggle baseline readings on/off."""
+        if hasattr(self.kafkaTable, "callback"):
+            self.kafkaTable.callback.baseline_enabled = bool(state)
 
 
 def main():
