@@ -126,7 +126,12 @@ class LessEffortCallback(CallbackBase):
         # for each dimension, choose one field only
         # the plan can supply a list of fields. It's assumed the first
         # of the list is always the one plotted against
-        self.dim_fields = [fields[0] for fields, stream_name in dimensions]
+        self.dim_fields = []
+        for fields, stream_name in dimensions:
+            try:
+                self.dim_fields.append(fields[0])
+            except:
+                continue
 
         # make distinction between flattened fields and plotted fields
         # motivation for this is that when plotting, we find dependent variable
