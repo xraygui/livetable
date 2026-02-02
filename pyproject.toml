@@ -1,5 +1,5 @@
 [project]
-name = "livetable"
+name = "nbs-livetable"
 dynamic = ["version"]
 description = "An implementation of LiveTable running over Kafka or ZMQ"
 authors = [
