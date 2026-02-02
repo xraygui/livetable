@@ -1,19 +1,37 @@
 [project]
 name = "livetable"
-version = "0.1.0"
+dynamic = ["version"]
 description = "An implementation of LiveTable running over Kafka or ZMQ"
 authors = [
     {name = "Charles Titus", email = "ctitus@bnl.gov"}
 ]
+requires-python = ">=3.8"
+keywords = ["bluesky", "nsls-ii", "gui"]
 dependencies = [
     "qtpy",
     "bluesky-kafka>=0.10.0",
     "bluesky-widgets>=0.0.16",
     "nslsii",
-    # Add other dependencies as needed
 ]
 
-[project.entry-points.console_scripts]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: Public Domain",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research"
+]
+
+[project.urls]
+homepage = "https://github.com/xraygui/livetable"
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[project.scripts]
 kafka-livetable = "livetable.kafka_table:main"
 qt-kafka-livetable = "livetable.QtKafkaTable:main"
 zmq-livetable = "livetable.zmq_table:main"
@@ -24,6 +42,20 @@ qt-zmq-livetable = "livetable.QtZmqTable:main"
 kafka-table-tab = "livetable.QtKafkaTable:QtKafkaTableTab"
 zmq-table-tab = "livetable.QtZmqTable:QtZMQTableTab"
 
-[build-system]
-requires = ["setuptools>=42", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[tool.pixi.feature.build.dependencies]
+hatch = "*"
+
+[tool.pixi.feature.build.tasks]
+build = "hatch build"
+test-release = "hatch publish -r test"
+
+[tool.pixi.feature.test.pypi-dependencies]
+livetable = { path=".", editable = true }
+
+[tool.pixi.environments]
+build = { features = ["build"], solve-group = "default" }
+test = { features = ["test"], solve-group = "default" }
