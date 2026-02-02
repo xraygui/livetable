@@ -32,15 +32,15 @@ build-backend = "hatchling.build"
 source = "vcs"
 
 [project.scripts]
-kafka-livetable = "livetable.kafka_table:main"
-qt-kafka-livetable = "livetable.QtKafkaTable:main"
-zmq-livetable = "livetable.zmq_table:main"
-qt-zmq-livetable = "livetable.QtZmqTable:main"
+kafka-livetable = "nbs_livetable.kafka_table:main"
+qt-kafka-livetable = "nbs_livetable.QtKafkaTable:main"
+zmq-livetable = "nbs_livetable.zmq_table:main"
+qt-zmq-livetable = "nbs_livetable.QtZmqTable:main"
 
 
 [project.entry-points."nbs_gui.tabs"]
-kafka-table-tab = "livetable.QtKafkaTable:QtKafkaTableTab"
-zmq-table-tab = "livetable.QtZmqTable:QtZMQTableTab"
+kafka-table-tab = "nbs_livetable.QtKafkaTable:QtKafkaTableTab"
+zmq-table-tab = "nbs_livetable.QtZmqTable:QtZMQTableTab"
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
@@ -54,7 +54,7 @@ build = "hatch build"
 test-release = "hatch publish -r test"
 
 [tool.pixi.feature.test.pypi-dependencies]
-livetable = { path=".", editable = true }
+nbs-livetable = { path=".", editable = true }
 
 [tool.pixi.environments]
 build = { features = ["build"], solve-group = "default" }
