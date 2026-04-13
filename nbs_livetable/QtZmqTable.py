@@ -27,19 +27,17 @@ class LiveTableModel(QWidget):
     def __init__(
         self,
         parent=None,
+        hostname="localhost",
+        port=5578,
     ):
         super().__init__(parent)
         self.msg_queue = queue.Queue()
-        zmq_dispatcher, callback = qt_zmq_table(self.newMsg)
+        zmq_dispatcher, callback = qt_zmq_table(self.newMsg, hostname=hostname, port=port)
         self.zmq_dispatcher = zmq_dispatcher
         self.callback = callback
         self.zmq_dispatcher.setParent(self)
         self.zmq_dispatcher.start()
 
-        label = QLabel("Test")
-        vbox = QVBoxLayout()
-        vbox.addWidget(label)
-        self.setLayout(vbox)
         self.destroyed.connect(lambda: self.stop_console_output_monitoring)
 
     def newMsg(self, msg):
@@ -84,7 +82,9 @@ class QtZMQTableTab(QWidget):
     def __init__(self, model, parent=None):
         super().__init__(parent)
         self.config = model.settings.gui_config
-        self.zmqTable = LiveTableModel(self)
+        hostname = self.config.get("zmq", {}).get("hostname", "localhost")
+        port = self.config.get("zmq", {}).get("port", 5578)
+        self.zmqTable = LiveTableModel(self, hostname=hostname, port=port)
         self.zmqMonitor = QtReConsoleMonitor(self.zmqTable, self)
 
         # Printing the font and font family used by self.zmqMonitor

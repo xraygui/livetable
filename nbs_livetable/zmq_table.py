@@ -4,21 +4,21 @@ from bluesky.callbacks.best_effort import BestEffortCallback
 from .lessEffortCallback import LessEffortCallback
 
 
-def zmq_table(out=print, continue_polling=None):
+def zmq_table(out=print, continue_polling=None, hostname="localhost", port=5578):
     callback = LessEffortCallback(out=out)
     # bec = BestEffortCallback()
 
-    zmq_dispatcher = RemoteDispatcher("localhost:5578")
+    zmq_dispatcher = RemoteDispatcher(f"{hostname}:{port}")
 
     zmq_dispatcher.subscribe(callback)
     zmq_dispatcher.start()
 
 
-def qt_zmq_table(out=print):
+def qt_zmq_table(out=print, hostname="localhost", port=5578):
     callback = LessEffortCallback(out=out)
     # bec = BestEffortCallback()
 
-    zmq_dispatcher = QtRemoteDispatcher("localhost:5578")
+    zmq_dispatcher = QtRemoteDispatcher(f"{hostname}:{port}")
 
     zmq_dispatcher.subscribe(callback)
 
